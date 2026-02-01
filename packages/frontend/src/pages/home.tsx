@@ -30,8 +30,8 @@ export default function Home() {
     }
     return (
         <>
-            <img className="mb-2 w-64" src="skriptl.svg" alt="Skriptl" />
-            <div className="bg-background mb-4 flex flex-col gap-2 rounded-xl border p-2 shadow-2xl">
+            <img className="mx-auto mb-2 w-64" src="skriptl.svg" alt="Skriptl" />
+            <div className="bg-background mx-auto mb-4 flex w-64 flex-col gap-2 rounded-xl p-2">
                 <Label className="ml-1">Name</Label>
                 <Input
                     value={name}
@@ -39,7 +39,7 @@ export default function Home() {
                     required
                 />
             </div>
-            <div className="bg-background flex flex-col rounded-xl border p-2 shadow-2xl">
+            <div className="bg-background mx-auto flex w-64 flex-col rounded-xl border p-2 shadow-2xl">
                 <ButtonGroup className="w-full">
                     <Input
                         placeholder="Room Code"

@@ -8,6 +8,7 @@
         "prettier-plugin-tailwindcss": "^0.7.2"
     },
     "dependencies": {
+        "@faker-js/faker": "^10.2.0",
         "lodash": "^4.17.23",
         "sqids": "^0.3.0"
     }

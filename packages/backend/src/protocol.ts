@@ -4,6 +4,7 @@ export type Message =
     | {type: "wrong-guess"; author: string; content: string}
     | {type: "correct-guess"; author: string}
     | {type: "chat"; author: string; content: string}
+    | {type: "system"; content: string}
 
 export interface ServerToClientEvents {
     view: (view: View) => void
