@@ -2,7 +2,6 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {ChatMessages} from "@/features/chat-messages"
-import {PageCard, PageHeader, PageLayout} from "@/layouts/page-layout"
 import {socket} from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
 import {useEffect, useState} from "react"
@@ -53,15 +52,9 @@ export default function WaitingRoom() {
     }
 
     return (
-        <PageLayout containerClassName="max-w-6xl">
-            <PageHeader
-                title="Waiting Room"
-                subtitle="Wait for players to join and get ready"
-                icon="⏳"
-            />
-
+        <>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <PageCard>
+                <>
                     <div className="space-y-6">
                         {/* Invite Link Section */}
                         <div className="space-y-2">
@@ -137,9 +130,9 @@ export default function WaitingRoom() {
                             {isReady ? "✓ Ready" : "Mark as Ready"}
                         </Button>
                     </div>
-                </PageCard>
+                </>
 
-                <PageCard>
+                <>
                     <div className="flex h-full flex-col space-y-4">
                         <Label>Chat</Label>
                         <div className="flex-1 overflow-y-auto p-4">
@@ -156,7 +149,7 @@ export default function WaitingRoom() {
                             <Button type="submit">Send</Button>
                         </form>
                     </div>
-                </PageCard>
+                </>
             </div>
 
             <p className="text-muted-foreground mt-6 text-center text-sm">
@@ -166,6 +159,6 @@ export default function WaitingRoom() {
                     `game starts in ${secondsRemaining}`
                 :   "Game will start when all players are ready"}
             </p>
-        </PageLayout>
+        </>
     )
 }

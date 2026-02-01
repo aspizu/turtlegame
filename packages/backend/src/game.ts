@@ -70,6 +70,7 @@ function beginDrawing(room: Room, sendViewForAll: () => void) {
 io.on("connection", (socket) => {
     const player = new Player(socket.id)
     players.set(socket.id, player)
+    socket.emit("view", createView(player))
     const sendViewForAll = () => {
         if (!player.room) return
         for (const pid of player.room.players) {

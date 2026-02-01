@@ -10,6 +10,7 @@
         "@fontsource-variable/figtree": "^5.2.10",
         "@fontsource-variable/fira-code": "^5.2.7",
         "@radix-ui/react-label": "^2.1.8",
+        "@radix-ui/react-separator": "^1.1.8",
         "@radix-ui/react-slot": "^1.2.4",
         "@tailwindcss/vite": "^4.1.18",
         "@uidotdev/usehooks": "^2.4.1",

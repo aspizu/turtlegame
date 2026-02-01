@@ -2,7 +2,6 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import {ChatMessages} from "@/features/chat-messages"
-import {PageCard, PageHeader, PageLayout} from "@/layouts/page-layout"
 import {socket} from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
 import {useDebounce} from "@uidotdev/usehooks"
@@ -13,7 +12,7 @@ export default function Game() {
     if (view.view !== "in-game") {
         throw new Error("Invalid view state for Game")
     }
-    const {playerID, players, hint, drawing, clockEndTime, round, wordChoices} = view
+    const {playerID, players, drawing, clockEndTime, wordChoices} = view
 
     const [message, setMessage] = useState("")
     const [now, setNow] = useState(Date.now)
@@ -66,17 +65,11 @@ export default function Game() {
     }
 
     return (
-        <PageLayout containerClassName="max-w-7xl">
-            <PageHeader
-                title={`Round ${round}`}
-                subtitle={hint ?? "Waiting..."}
-                icon="🎨"
-            />
-
+        <>
             <div className="grid grid-cols-12 gap-6">
                 {/* Left: Players List */}
                 <div className="col-span-12 md:col-span-3">
-                    <PageCard>
+                    <>
                         <div className="space-y-4">
                             <Label>Players ({players.length})</Label>
                             <div className="border-border divide-border divide-y rounded-lg border">
@@ -114,12 +107,12 @@ export default function Game() {
                                 ))}
                             </div>
                         </div>
-                    </PageCard>
+                    </>
                 </div>
 
                 {/* Center: Drawing Area */}
                 <div className="col-span-12 md:col-span-6">
-                    <PageCard>
+                    <>
                         <div className="space-y-4">
                             {wordChoices && wordChoices.length > 0 && (
                                 <div className="space-y-2">
@@ -151,12 +144,12 @@ export default function Game() {
                                 }
                             />
                         </div>
-                    </PageCard>
+                    </>
                 </div>
 
                 {/* Right: Chat */}
                 <div className="col-span-12 md:col-span-3">
-                    <PageCard>
+                    <>
                         <div className="flex h-full flex-col space-y-4">
                             <Label>Chat</Label>
                             <div className="flex-1 overflow-y-auto p-4">
@@ -183,7 +176,7 @@ export default function Game() {
                                 </Button>
                             </form>
                         </div>
-                    </PageCard>
+                    </>
                 </div>
             </div>
 
@@ -193,6 +186,6 @@ export default function Game() {
                     `Time remaining: ${secondsRemaining}s`
                 :   "Waiting for next round..."}
             </p>
-        </PageLayout>
+        </>
     )
 }
