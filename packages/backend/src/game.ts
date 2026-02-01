@@ -95,13 +95,14 @@ io.on("connection", (socket) => {
         sendViewForAll()
     })
 
-    socket.on("update-cosmetics", (cosmetics) => {
-        if (!player.room || player.room.notready) return
-        player.cosmetics.update(cosmetics)
-        sendViewForAll()
-    })
+    // socket.on("update-cosmetics", (cosmetics) => {
+    //     if (!player.room || player.room.notready) return
+    //     player.cosmetics.update(cosmetics)
+    //     sendViewForAll()
+    // })
 
-    socket.on("join-room", (roomID, callback) => {
+    socket.on("join-room", (roomID, name, callback) => {
+        player.name = name
         const room = rooms.get(roomID)
         if (player.room || !room) return callback(false)
         room.addPlayer(player)
@@ -110,7 +111,8 @@ io.on("connection", (socket) => {
         sendViewForAll()
     })
 
-    socket.on("create-room", (callback) => {
+    socket.on("create-room", (name, callback) => {
+        player.name = name
         if (player.room) return callback()
         const room = new Room(player)
         rooms.set(room.ID, room)

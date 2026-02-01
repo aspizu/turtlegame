@@ -12,8 +12,12 @@ export interface ServerToClientEvents {
 
 export interface ClientToServerEvents {
     "update-cosmetics": (cosmetics: {name: string}) => void
-    "join-room": (roomID: string, callback: (success: boolean) => void) => void
-    "create-room": (callback: (roomID?: string) => void) => void
+    "join-room": (
+        roomID: string,
+        name: string,
+        callback: (success: boolean) => void,
+    ) => void
+    "create-room": (name: string, callback: (roomID?: string) => void) => void
     "send-message": (content: string) => void
     "update-ready": (isReady: boolean) => void
     "update-drawing": (drawing: string) => void

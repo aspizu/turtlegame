@@ -2,19 +2,14 @@ import _ from "lodash"
 import type {Room} from "./room"
 
 export class Cosmetics {
-    name: string
+    constructor() {}
 
-    constructor() {
-        this.name = `test subject #${_.random(1000, 9999)}`
-    }
-
-    update({name}: {name: string}) {
-        this.name = name.trim().slice(0, 24)
-    }
+    update() {}
 }
 
 export class Player {
     ID: string
+    name: string
     room?: Room
     cosmetics: Cosmetics
     ready: boolean
@@ -22,6 +17,7 @@ export class Player {
 
     constructor(ID: string) {
         this.ID = ID
+        this.name = `test subject ${_.random(1000, 9999)}`
         this.cosmetics = new Cosmetics()
         this.ready = false
         this.guessed = false

@@ -5,38 +5,58 @@ import {Label} from "@/components/ui/label"
 import {panic} from "@/lib/utils"
 import {socket} from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
-import {useDebounce} from "@uidotdev/usehooks"
+import _ from "lodash"
 import {Plus} from "lucide-react"
-import {useEffect, useState} from "react"
+import {useState} from "react"
 
 export default function Home() {
     const view = useAppStore((state) => state.view)
     if (view.view !== "menu") panic()
-    const [name, setName] = useState(view.cosmetics.name)
-    const debouncedName = useDebounce(name, 300)
-    if (!name && view.cosmetics.name) {
-        setName(view.cosmetics.name)
+    const [name, setName] = useState(`test subject #${_.random(1000, 9999)}`)
+    const [roomCode, setRoomCode] = useState("")
+    const [isRoomCodeInvalid, setIsRoomCodeInvalid] = useState(false)
+    function joinRoom() {
+        if (!roomCode.trim()) return
+        if (!name.trim()) return
+        socket.emit("join-room", roomCode, name, (success) => {
+            if (!success) {
+                setIsRoomCodeInvalid(true)
+            }
+        })
     }
-    useEffect(() => {
-        socket.emit("update-cosmetics", {name: debouncedName})
-    }, [debouncedName])
+    function createRoom() {
+        if (!name.trim()) return
+        socket.emit("create-room", name, () => {})
+    }
     return (
         <>
             <img className="mb-2 w-64" src="skriptl.svg" alt="Skriptl" />
-            <div className="mb-4 flex flex-col gap-2 rounded-xl border p-2 shadow">
+            <div className="bg-background mb-4 flex flex-col gap-2 rounded-xl border p-2 shadow-2xl">
                 <Label className="ml-1">Name</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
+                <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                />
             </div>
-            <div className="flex flex-col rounded-xl border p-2 shadow">
-                <ButtonGroup>
-                    <Input placeholder="Room Code" />
-                    <Button variant="outline">Join</Button>
+            <div className="bg-background flex flex-col rounded-xl border p-2 shadow-2xl">
+                <ButtonGroup className="w-full">
+                    <Input
+                        placeholder="Room Code"
+                        value={roomCode}
+                        onChange={(e) => setRoomCode(e.target.value)}
+                        required
+                        aria-invalid={isRoomCodeInvalid}
+                    />
+                    <Button variant="outline" onClick={joinRoom}>
+                        Join
+                    </Button>
                 </ButtonGroup>
                 <span className="text-muted-foreground bg-background relative z-20 my-2 inline-block text-center text-xs font-medium">
                     <div className="bg-border absolute top-[50%] z-10 h-px w-full -translate-y-[50%]" />
                     OR
                 </span>
-                <Button size="sm" variant="outline">
+                <Button size="sm" variant="outline" onClick={createRoom}>
                     <Plus />
                     Create Room
                 </Button>

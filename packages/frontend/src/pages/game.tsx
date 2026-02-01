@@ -80,7 +80,7 @@ export default function Game() {
                                     >
                                         <div className="flex items-center gap-2">
                                             <span className="text-foreground font-medium">
-                                                {player.cosmetics.name}
+                                                {player.name}
                                             </span>
                                             {player.ID === playerID && (
                                                 <span className="text-muted-foreground text-xs">

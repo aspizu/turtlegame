@@ -9,11 +9,13 @@ export type View =
       }
     | {
           view: "waiting-room"
+          name: string
           playerID: string
           roomID: string
           players: {
               ID: string
-              cosmetics: Cosmetics
+              name: string
+              cosmetics: null
               isReady: boolean
               isOwner: boolean
           }[]
@@ -21,11 +23,13 @@ export type View =
       }
     | {
           view: "in-game"
+          name: string
           playerID: string
           roomID: string
           players: {
               ID: string
-              cosmetics: InstanceType<typeof Cosmetics>
+              name: string
+              cosmetics: null
               state: "drawing" | "guessing" | "guessed"
               isOwner: boolean
           }[]
@@ -44,13 +48,15 @@ export function createView(player: Player): View {
     if (player.room.notready) {
         return {
             view: "waiting-room",
+            name: player.name,
             playerID: player.ID,
             roomID: player.room.ID,
             players: player.room.players.map((pid) => {
                 const p = players.get(pid)!
                 return {
                     ID: p.ID,
-                    cosmetics: p.cosmetics,
+                    name: p.name,
+                    cosmetics: null,
                     isReady: p.ready,
                     isOwner: player.room!.owner == p.ID,
                 }
@@ -60,6 +66,7 @@ export function createView(player: Player): View {
     }
     return {
         view: "in-game",
+        name: player.name,
         playerID: player.ID,
         roomID: player.room.ID,
         players: player.room.players.map((pid) => {
@@ -69,7 +76,8 @@ export function createView(player: Player): View {
             else if (p.guessed) state = "guessed"
             return {
                 ID: p.ID,
-                cosmetics: p.cosmetics,
+                name: p.name,
+                cosmetics: null,
                 state,
                 isOwner: player.room!.owner == p.ID,
             }

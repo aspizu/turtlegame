@@ -6,5 +6,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function panic(message?: string): never {
-    throw new Error(message ?? "Panic")
+    throw new Error(`PANIC: ${message ?? "This code path should be unreachable."}`)
 }
