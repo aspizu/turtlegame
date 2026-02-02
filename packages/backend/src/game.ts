@@ -80,6 +80,10 @@ io.on("connection", (socket) => {
         }
     }
 
+    socket.on("request-view-update", () => {
+        socket.emit("view", createView(player))
+    })
+
     socket.on("disconnect", () => {
         players.delete(socket.id)
         if (!player.room) return
