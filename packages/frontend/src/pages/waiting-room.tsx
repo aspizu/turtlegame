@@ -42,6 +42,7 @@ export default function WaitingRoom() {
                         <Input
                             className="text-muted-foreground border-none font-medium"
                             value={roomID}
+                            readOnly
                         />
                         <span className="text-muted-foreground text-center text-xs">
                             Share this room code to invite others
