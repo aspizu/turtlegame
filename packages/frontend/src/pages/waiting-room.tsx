@@ -1,6 +1,6 @@
 import {Input} from "@/components/ui/input"
 import {Toggle} from "@/components/ui/toggle"
-import {ChatMessages} from "@/features/chat-messages"
+import {AppChat} from "@/features/app-chat"
 import {useClock} from "@/hooks/use-clock"
 import {panic} from "@/lib/utils"
 import {socket} from "@/services/socket"
@@ -65,7 +65,7 @@ export default function WaitingRoom() {
                         :   "Waiting for others to be ready..."}
                     </span>
                 </div>
-                <ChatMessages type="chat" />
+                <AppChat type="chat" />
             </div>
         </div>
     )

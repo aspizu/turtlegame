@@ -10,7 +10,7 @@ import {useCallback, useEffect, useRef, useState} from "react"
 import {ChatBubble} from "../components/chat-bubble"
 import {useAppStore} from "../stores/app-store"
 
-export function ChatMessages({
+export function AppChat({
     type,
     hideInput = false,
 }: {

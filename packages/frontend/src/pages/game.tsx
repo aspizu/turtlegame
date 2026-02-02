@@ -1,10 +1,11 @@
 import {Button} from "@/components/ui/button"
-import {ChatMessages} from "@/features/chat-messages"
+import {AppChat} from "@/features/app-chat"
+import Editor from "@/features/app-editor"
 import {useClock} from "@/hooks/use-clock"
+import {useDiffArray, useDiffValue} from "@/hooks/use-diff"
 import {panic} from "@/lib/utils"
 import {useAppStore} from "@/stores/app-store"
 import {Clock, Pencil, Smile, User} from "lucide-react"
-import {useEffect, useRef} from "react"
 
 export default function Game() {
     const view = useAppStore((state) => state.view)
@@ -17,14 +18,26 @@ export default function Game() {
     const isDrawing = currentPlayer?.state === "drawing" || !!wordChoices
 
     const drawerName = players.find((p) => p.state === "drawing")?.name
-    const prevDrawerNameRef = useRef<string | undefined>(undefined)
+    const playerNames = players.map((p) => p.name)
 
-    useEffect(() => {
-        if (drawerName && drawerName !== prevDrawerNameRef.current) {
-            addMessage({type: "system", content: `${drawerName} is drawing`})
+    useDiffValue(drawerName, (newDrawer) => {
+        if (newDrawer) {
+            addMessage({type: "system", content: `${newDrawer} is drawing`})
         }
-        prevDrawerNameRef.current = drawerName
-    }, [drawerName, addMessage])
+    })
+
+    useDiffArray(playerNames, {
+        add: (newPlayers) => {
+            newPlayers.forEach((player) => {
+                addMessage({type: "system", content: `${player} joined`})
+            })
+        },
+        remove: (leftPlayers) => {
+            leftPlayers.forEach((player) => {
+                addMessage({type: "system", content: `${player} disconnected`})
+            })
+        },
+    })
 
     return (
         <>
@@ -73,8 +86,9 @@ export default function Game() {
                         </div>
                     )}
                     <div className="text-3xl font-bold tracking-widest">{hint}</div>
+                    <Editor isDrawing={isDrawing} />
                 </div>
-                <ChatMessages type="guess" hideInput={isDrawing} />
+                <AppChat type="guess" hideInput={isDrawing} />
             </div>
         </>
     )
