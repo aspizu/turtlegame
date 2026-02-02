@@ -69,17 +69,20 @@ export function createView(player: Player): View {
         name: player.name,
         playerID: player.ID,
         roomID: player.room.ID,
-        players: player.room.players.map((pid) => {
-            const p = players.get(pid)!
+        players: (
+            player.room.players
+                .map((pid) => players.get(pid))
+                .filter(Boolean) as Player[]
+        ).map((p) => {
             let state: "drawing" | "guessing" | "guessed" = "guessing"
-            if (p.room!.drawer == p.ID) state = "drawing"
+            if (p.room?.drawer == p.ID) state = "drawing"
             else if (p.guessed) state = "guessed"
             return {
                 ID: p.ID,
                 name: p.name,
                 cosmetics: null,
                 state,
-                isOwner: player.room!.owner == p.ID,
+                isOwner: player.room?.owner == p.ID,
             }
         }),
         hint:
