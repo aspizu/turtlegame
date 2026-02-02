@@ -23,6 +23,7 @@ export interface ClientToServerEvents {
     "update-ready": (isReady: boolean) => void
     "update-drawing": (drawing: string) => void
     "choose-word": (word: string) => void
+    "request-view-update": () => void
 }
 
 export interface InterServerEvents {
