@@ -1,9 +1,11 @@
 import {Button} from "@/components/ui/button"
 import {AppChat} from "@/features/app-chat"
-import Editor from "@/features/app-editor"
+import AppDisplay from "@/features/app-display"
+import AppEditor from "@/features/app-editor"
 import {useClock} from "@/hooks/use-clock"
 import {useDiffArray, useDiffValue} from "@/hooks/use-diff"
 import {panic} from "@/lib/utils"
+import {socket} from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
 import {Clock, Pencil, Smile, User} from "lucide-react"
 
@@ -78,7 +80,14 @@ export default function Game() {
                             </p>
                             <div className="flex gap-2">
                                 {wordChoices.map((word) => (
-                                    <Button key={word} variant="outline" size="lg">
+                                    <Button
+                                        key={word}
+                                        variant="outline"
+                                        size="lg"
+                                        onClick={() => {
+                                            socket.emit("choose-word", word)
+                                        }}
+                                    >
                                         {word}
                                     </Button>
                                 ))}
@@ -86,7 +95,9 @@ export default function Game() {
                         </div>
                     )}
                     <div className="text-3xl font-bold tracking-widest">{hint}</div>
-                    <Editor isDrawing={isDrawing && !wordChoices} />
+                    {isDrawing && !wordChoices ?
+                        <AppEditor />
+                    :   <AppDisplay />}
                 </div>
                 <AppChat type="guess" hideInput={isDrawing} />
             </div>
