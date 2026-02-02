@@ -86,7 +86,7 @@ export default function Game() {
                         </div>
                     )}
                     <div className="text-3xl font-bold tracking-widest">{hint}</div>
-                    <Editor isDrawing={isDrawing} />
+                    <Editor isDrawing={isDrawing && !wordChoices} />
                 </div>
                 <AppChat type="guess" hideInput={isDrawing} />
             </div>
