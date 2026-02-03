@@ -5,7 +5,7 @@ import AppEditor from "@/features/app-editor"
 import {useClock} from "@/hooks/use-clock"
 import {useDiffArray, useDiffValue} from "@/hooks/use-diff"
 import {panic} from "@/lib/utils"
-import {socket} from "@/services/socket"
+import socket from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
 import {Clock, Pencil, Smile, User} from "lucide-react"
 
