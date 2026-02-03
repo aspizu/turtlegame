@@ -1,7 +1,7 @@
 import Game from "@/pages/game"
 import Home from "@/pages/home"
 import WaitingRoom from "@/pages/waiting-room"
-import {socket} from "@/services/socket"
+import socket from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
 import {useEffect} from "react"
 
