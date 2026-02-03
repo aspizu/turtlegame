@@ -1,7 +1,7 @@
+import P5Canvas from "@/components/p5canvas"
 import {compileSketch} from "@/lib/p5"
 import {socket} from "@/services/socket"
 import Editor from "@monaco-editor/react"
-import {P5Canvas} from "@p5-wrapper/react"
 import {useDebounce} from "@uidotdev/usehooks"
 
 import {useEffect, useMemo, useState} from "react"
