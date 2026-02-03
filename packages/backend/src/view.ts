@@ -1,11 +1,11 @@
 import {players} from "./game"
-import type {Cosmetics, Player} from "./player"
+import type {Player} from "./player"
 
 export type View =
     | {
           view: "menu"
           playerID: string
-          cosmetics: Cosmetics
+          cosmetics: null
       }
     | {
           view: "waiting-room"
@@ -43,7 +43,7 @@ export type View =
 
 export function createView(player: Player): View {
     if (!player.room) {
-        return {view: "menu", playerID: player.ID, cosmetics: player.cosmetics}
+        return {view: "menu", playerID: player.ID, cosmetics: null}
     }
     if (player.room.notready) {
         return {
