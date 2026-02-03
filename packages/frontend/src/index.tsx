@@ -1,12 +1,12 @@
 import "@/styles/global.css"
 import {StrictMode} from "react"
 import {createRoot} from "react-dom/client"
+import App from "./features/app"
 
 // @ts-expect-error foo
 import "@fontsource-variable/figtree"
 // @ts-expect-error foo
 import "@fontsource-variable/fira-code"
-import App from "./features/app"
 
 if (typeof Node === "function" && Node.prototype) {
     const originalRemoveChild = Node.prototype.removeChild
