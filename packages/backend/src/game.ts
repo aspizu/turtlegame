@@ -1,4 +1,6 @@
 import _ from "lodash"
+import {addMilliseconds} from "date-fns"
+import {serializeTimestamp} from "./lib/datetime"
 import {Player} from "./player"
 import {Room} from "./room"
 import {io} from "./socket"
@@ -43,13 +45,13 @@ function nextTurn(room: Room, sendViewForAll: () => void) {
     room.wordChoices = undefined
     clearTimeout(room.timeout)
     room.waiting = true
-    room.clockEndTime = new Date(Date.now() + 1_000).toISOString()
+    room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 1_000))
     sendViewForAll()
     room.timeout = setTimeout(() => {
         room.waiting = false
         const wordChoices = _.shuffle(words).slice(0, 3)
         room.wordChoices = wordChoices
-        room.clockEndTime = new Date(Date.now() + 5_000).toISOString()
+        room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 5_000))
         sendViewForAll()
         room.timeout = setTimeout(() => {
             room.wordChoices = undefined
@@ -60,7 +62,7 @@ function nextTurn(room: Room, sendViewForAll: () => void) {
 }
 
 function beginDrawing(room: Room, sendViewForAll: () => void) {
-    room.clockEndTime = new Date(Date.now() + 25_000).toISOString()
+    room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 25_000))
     sendViewForAll()
     room.timeout = setTimeout(() => {
         nextTurn(room, sendViewForAll)
@@ -135,7 +137,7 @@ io.on("connection", (socket) => {
             room.clockEndTime = undefined
         }
         if (!room.timeout && room.allReady() && room.players.length >= 3) {
-            room.clockEndTime = new Date(Date.now() + 5000).toISOString()
+            room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 5_000))
             room.timeout = setTimeout(() => {
                 room.notready = false
                 room.timeout = undefined
