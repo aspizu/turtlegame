@@ -58,16 +58,19 @@ function nextTurn(room: Room, sendViewForAll: () => void) {
             room.wordChoices = undefined
             room.word = wordChoices[_.random(0, 2)]
             beginDrawing(room, sendViewForAll)
-        }, 5_000)
-    }, 1_000)
+        }, 5 * 1000)
+    }, 1000)
 }
 
 function beginDrawing(room: Room, sendViewForAll: () => void) {
     room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 25_000))
     sendViewForAll()
-    room.timeout = setTimeout(() => {
-        nextTurn(room, sendViewForAll)
-    }, 25_000)
+    room.timeout = setTimeout(
+        () => {
+            nextTurn(room, sendViewForAll)
+        },
+        5 * 60 * 1000,
+    )
 }
 
 io.on("connection", (socket) => {
