@@ -1,5 +1,5 @@
-import _ from "lodash"
 import {addMilliseconds} from "date-fns"
+import _ from "lodash"
 import {serializeTimestamp} from "./lib/datetime"
 import {Player} from "./player"
 import {Room} from "./room"
@@ -18,6 +18,7 @@ function nextTurn(room: Room, sendViewForAll: () => void) {
         room.round += 1
         if (room.round == 5) {
             room.round = 0
+            room.notready = true
             room.waiting = true
             room.word = undefined
             room.drawer = undefined
