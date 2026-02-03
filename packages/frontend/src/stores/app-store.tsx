@@ -15,8 +15,8 @@ export interface AppActions {
 }
 
 export const useAppStore = create<AppState & AppActions>()(
-    immer((set, get) => ({
-        view: {view: "menu", playerID: "", cosmetics: {}},
+    immer((set) => ({
+        view: {view: "menu", playerID: "", cosmetics: null},
         messages: [],
 
         setView: (view: View) => {
