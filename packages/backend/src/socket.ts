@@ -16,6 +16,10 @@ export const io = new Server<
 
 export const engine = new Engine({
     path: "/socket.io/",
+    cors: {
+        origin: "*",
+        credentials: true,
+    },
 })
 
 io.bind(engine)
