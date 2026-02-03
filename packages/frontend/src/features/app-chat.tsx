@@ -4,7 +4,7 @@ import {
     InputGroupButton,
     InputGroupInput,
 } from "@/components/ui/input-group"
-import {socket} from "@/services/socket"
+import socket from "@/services/socket"
 import {Send} from "lucide-react"
 import {useCallback, useEffect, useRef, useState} from "react"
 import {ChatBubble} from "../components/chat-bubble"
