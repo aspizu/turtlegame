@@ -25,16 +25,21 @@ export default function WaitingRoom() {
                         {players.map((player) => (
                             <div
                                 key={player.ID}
-                                className="bg-muted flex items-center gap-2 rounded-xl px-4 py-2"
+                                className="bg-muted flex flex-col rounded-xl px-4 py-2"
                             >
-                                <User />
-                                <span className="font-medium">{player.name}</span>
-                                {player.ID == playerID && (
-                                    <span className="text-muted-foreground font-medium">
-                                        (You)
-                                    </span>
-                                )}
-                                {player.isReady && <ThumbsUp className="size-4" />}
+                                <div className="flex items-center gap-2">
+                                    <User />
+                                    <span className="font-medium">{player.name}</span>
+                                    {player.ID == playerID && (
+                                        <span className="text-muted-foreground font-medium">
+                                            (You)
+                                        </span>
+                                    )}
+                                    {player.isReady && <ThumbsUp className="size-4" />}
+                                </div>
+                                <span className="text-muted-foreground ml-6 text-sm">
+                                    {player.score} points
+                                </span>
                             </div>
                         ))}
                     </div>
