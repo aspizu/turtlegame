@@ -3,7 +3,7 @@ import {Toggle} from "@/components/ui/toggle"
 import {AppChat} from "@/features/app-chat"
 import {useClock} from "@/hooks/use-clock"
 import {panic} from "@/lib/utils"
-import {socket} from "@/services/socket"
+import socket from "@/services/socket"
 import {useAppStore} from "@/stores/app-store"
 import {ThumbsUp, User} from "lucide-react"
 
