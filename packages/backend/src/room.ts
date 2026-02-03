@@ -18,6 +18,7 @@ export class Room {
     clockEndTime?: string
     drawing?: string
     drawer?: string
+    turnBeginTime?: Date
 
     constructor(owner: Player) {
         this.ID = sqids.encode([Date.now()])

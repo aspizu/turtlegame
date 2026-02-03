@@ -18,6 +18,7 @@ export type View =
               cosmetics: null
               isReady: boolean
               isOwner: boolean
+              score: number
           }[]
           clockEndTime?: string
       }
@@ -32,6 +33,7 @@ export type View =
               cosmetics: null
               state: "drawing" | "guessing" | "guessed"
               isOwner: boolean
+              score: number
           }[]
           hint?: string
           wordChoices?: string[]
@@ -59,6 +61,7 @@ export function createView(player: Player): View {
                     cosmetics: null,
                     isReady: p.ready,
                     isOwner: player.room!.owner == p.ID,
+                    score: p.score,
                 }
             }),
             clockEndTime: player.room.clockEndTime,
@@ -83,6 +86,7 @@ export function createView(player: Player): View {
                 cosmetics: null,
                 state,
                 isOwner: player.room?.owner == p.ID,
+                score: p.score,
             }
         }),
         hint:

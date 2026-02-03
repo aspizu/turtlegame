@@ -1,4 +1,4 @@
-import {addMilliseconds} from "date-fns"
+import * as fns from "date-fns"
 import _ from "lodash"
 import {serializeTimestamp} from "./lib/datetime"
 import {Player} from "./player"
@@ -9,6 +9,20 @@ import words from "./words.json"
 
 export const rooms = new Map<string, Room>()
 export const players = new Map<string, Player>()
+
+function setRoomTimeout(
+    room: Room,
+    durationMs: number,
+    callback: () => void,
+    sendViewForAll: () => void,
+) {
+    room.clockEndTime = serializeTimestamp(fns.addMilliseconds(new Date(), durationMs))
+    if (room.timeout) {
+        clearTimeout(room.timeout)
+    }
+    room.timeout = setTimeout(callback, durationMs)
+    sendViewForAll()
+}
 
 function nextTurn(room: Room, sendViewForAll: () => void) {
     let nextDrawerIdx =
@@ -46,30 +60,37 @@ function nextTurn(room: Room, sendViewForAll: () => void) {
     room.wordChoices = undefined
     clearTimeout(room.timeout)
     room.waiting = true
-    room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 1_000))
-    sendViewForAll()
-    room.timeout = setTimeout(() => {
-        room.waiting = false
-        const wordChoices = _.shuffle(words).slice(0, 3)
-        room.wordChoices = wordChoices
-        room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 5_000))
-        sendViewForAll()
-        room.timeout = setTimeout(() => {
-            room.wordChoices = undefined
-            room.word = wordChoices[_.random(0, 2)]
-            beginDrawing(room, sendViewForAll)
-        }, 5 * 1000)
-    }, 1000)
+    setRoomTimeout(
+        room,
+        1_000,
+        () => {
+            room.waiting = false
+            const wordChoices = _.shuffle(words).slice(0, 3)
+            room.wordChoices = wordChoices
+            setRoomTimeout(
+                room,
+                5_000,
+                () => {
+                    room.wordChoices = undefined
+                    room.word = wordChoices[_.random(0, 2)]
+                    beginDrawing(room, sendViewForAll)
+                },
+                sendViewForAll,
+            )
+        },
+        sendViewForAll,
+    )
 }
 
 function beginDrawing(room: Room, sendViewForAll: () => void) {
-    room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 25_000))
-    sendViewForAll()
-    room.timeout = setTimeout(
+    room.turnBeginTime = new Date()
+    setRoomTimeout(
+        room,
+        25_000,
         () => {
             nextTurn(room, sendViewForAll)
         },
-        5 * 60 * 1000,
+        sendViewForAll,
     )
 }
 
@@ -140,33 +161,38 @@ io.on("connection", (socket) => {
             room.timeout = undefined
             room.clockEndTime = undefined
         }
-        if (!room.timeout && room.allReady() && room.players.length >= 3) {
-            room.clockEndTime = serializeTimestamp(addMilliseconds(new Date(), 5_000))
-            room.timeout = setTimeout(() => {
-                room.notready = false
-                room.timeout = undefined
-                room.clockEndTime = undefined
-                nextTurn(room, sendViewForAll)
-            }, 5000)
-        }
         sendViewForAll()
+        if (!room.timeout && room.allReady() && room.players.length >= 3) {
+            setRoomTimeout(
+                room,
+                5_000,
+                () => {
+                    room.notready = false
+                    room.timeout = undefined
+                    room.clockEndTime = undefined
+                    nextTurn(room, sendViewForAll)
+                },
+                sendViewForAll,
+            )
+        }
     })
 
     socket.on("send-message", (content) => {
         content = content.trim()
         if (!content) return
         if (!player.room) return
-        if (player.room.notready || player.room.waiting || !player.room.word) {
-            io.to(player.room.ID).emit("receive-message", {
+        const room = player.room
+        if (room.notready || room.waiting || !room.word) {
+            io.to(room.ID).emit("receive-message", {
                 type: "chat",
                 author: player.ID,
                 content,
             })
             return
         }
-        if (player.room.drawer == player.ID) return
+        if (room.drawer == player.ID) return
         if (player.guessed) {
-            for (const pid of player.room.players) {
+            for (const pid of room.players) {
                 const p = players.get(pid)
                 if (!p?.guessed) continue
                 io.to(p.ID).emit("receive-message", {
@@ -177,21 +203,27 @@ io.on("connection", (socket) => {
             }
             return
         }
-        if (content.toLowerCase() == player.room.word?.toLowerCase()) {
+        if (content.toLowerCase() == room.word?.toLowerCase()) {
             player.guessed = true
-            io.to(player.room.ID).emit("receive-message", {
+            if (room.turnBeginTime) {
+                const delta =
+                    1 /
+                    Math.max(1, fns.differenceInSeconds(new Date(), room.turnBeginTime))
+                player.score += Math.floor(1000 * delta)
+            }
+            io.to(room.ID).emit("receive-message", {
                 type: "correct-guess",
                 author: player.ID,
             })
-            if (player.room.allGuessed()) {
-                clearTimeout(player.room.timeout)
-                player.room.timeout = undefined
-                nextTurn(player.room, sendViewForAll)
+            if (room.allGuessed()) {
+                clearTimeout(room.timeout)
+                room.timeout = undefined
+                nextTurn(room, sendViewForAll)
                 return
             }
             sendViewForAll()
         } else {
-            io.to(player.room.ID).emit("receive-message", {
+            io.to(room.ID).emit("receive-message", {
                 type: "wrong-guess",
                 author: player.ID,
                 content,

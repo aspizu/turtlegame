@@ -14,6 +14,7 @@ export class Player {
     cosmetics: Cosmetics
     ready: boolean
     guessed: boolean
+    score: number
 
     constructor(ID: string) {
         this.ID = ID
@@ -21,6 +22,7 @@ export class Player {
         this.cosmetics = new Cosmetics()
         this.ready = false
         this.guessed = false
+        this.score = 0
     }
 
     updateReady(isReady: boolean): boolean {
