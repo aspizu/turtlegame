@@ -1,7 +1,7 @@
+import P5Canvas from "@/components/p5canvas"
 import {compileSketch} from "@/lib/p5"
 import {panic} from "@/lib/utils"
 import {useAppStore} from "@/stores/app-store"
-import {P5Canvas} from "@p5-wrapper/react"
 import {useMemo} from "react"
 
 export default function AppDisplay() {
